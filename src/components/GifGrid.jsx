@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getGifs } from "../helpers/getGifs";
+import { GifItem } from "./GifItem";
+
 
 export const GifGrid = ({category}) => {
 
-  const [Counter, setCounter] = useState(10)
+
+  const [images, setImages] = useState([]);
+
+  const getImages = async() => {
+    const newImages = await getGifs(category);
+    setImages(newImages);
+  }
   
   useEffect( () => {
-    getGifs(category);
+    getImages();
   }, [])
   
 
@@ -14,7 +22,17 @@ export const GifGrid = ({category}) => {
  
     <>  
         <h3>{category}</h3>
-        <p>Hola mundo</p>    
+        <div className="card-grid">
+          {
+            images.map( (image) => (
+              <GifItem 
+                  key={image.id} 
+                  title={image.title}
+                  url={image.url}
+              />
+          ))
+          } 
+        </div>
     </>
 
   )
